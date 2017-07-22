@@ -1,0 +1,16 @@
+name: SlotCache
+description: A neat way for players to aquire items
+author: RypoFalem
+version: 0.1
+main: io.github.rypofalem.slotcache.SlotCachePlugin
+depend: [ Custom ]
+commands:
+  slotcache:
+  permission: slotcache.admin
+  usage: "/<command> add <cachename> <hand|customItemName> <weight> [number]
+  /<command> <list|ls> <cachename>"
+  description: admin stuff
+permissions:
+  slotcache.admin:
+    description: admin stuff
+    default: OP

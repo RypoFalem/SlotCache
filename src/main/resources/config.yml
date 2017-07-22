@@ -1,0 +1,14 @@
+caches:
+  eyecache:
+    -
+      item: cobble
+      weight: 3
+    -
+      item: grass
+      weight: 5
+    -
+      item: diamond
+      weight: 500
+    -
+      item: gold
+      weight: 30
