@@ -6,10 +6,10 @@ main: io.github.rypofalem.slotcache.SlotCachePlugin
 depend: [ Custom ]
 commands:
   slotcache:
-  permission: slotcache.admin
-  usage: "/<command> add <cachename> <hand|customItemName> <weight> [number]
-  /<command> <list|ls> <cachename>"
-  description: admin stuff
+    permission: slotcache.admin
+    usage: "/<command> add <cachename> <hand|customItemName> <weight> [amount(min:max)]\n
+    /<command> <list|ls> <cachename>"
+    description: admin stuff
 permissions:
   slotcache.admin:
     description: admin stuff

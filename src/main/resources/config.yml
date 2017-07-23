@@ -1,14 +1,10 @@
 caches:
   eyecache:
-    -
-      item: cobble
-      weight: 3
-    -
-      item: grass
-      weight: 5
-    -
-      item: diamond
-      weight: 500
-    -
-      item: gold
-      weight: 30
+    displayName: Creepy Eye Cache
+    description: Contains valuable items such as diamonds, powerful tools, and rarely custom items.
+    items:
+      -
+        item: cobble
+        weight: 3
+        min: 1
+        max: 1
