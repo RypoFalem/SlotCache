@@ -7,12 +7,14 @@ import com.winthier.custom.item.ItemContext;
 import com.winthier.custom.item.ItemDescription;
 import com.winthier.custom.item.UncraftableItem;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,11 +78,19 @@ public class SlotCacheItem implements CustomItem, UncraftableItem{
         List<ItemStack> itemList = new ArrayList<>();
         for(SlotItem slotItem : slotItems){
             ItemStack item = slotItem.getItem().clone();
-            ItemDescription description = new ItemDescription();
-            description.getStats().put("Probability", String.format("%.2f%s", slotItem.weight * 100.0 / totalWeight, "%"));
-            description.getStats().put("Amount", slotItem.getMin() == slotItem.getMax() ?
-                    slotItem.getMax() + "" : String.format("%d to %d", slotItem.getMin(), slotItem.getMax()));
-            description.apply(item);
+            List<String> lore;
+            if(item.hasItemMeta() && item.getItemMeta().hasLore()){
+                lore = item.getItemMeta().getLore();
+            }else{
+                lore = new ArrayList<>();
+            }
+            lore.add(String.format("%sProbability: %.2f%s", ChatColor.GREEN.toString(), slotItem.weight * 100.0 / totalWeight, "%"));
+            lore.add(String.format("%sAmount: %s", ChatColor.GREEN.toString(), slotItem.getMin() == slotItem.getMax() ?
+                    slotItem.getMax() + "" : String.format("%d to %d", slotItem.getMin(), slotItem.getMax())));
+            System.out.println(lore.toString());
+            ItemMeta meta = item.getItemMeta();
+            meta.setLore(lore);
+            item.setItemMeta(meta);
             itemList.add(item);
         }
 
