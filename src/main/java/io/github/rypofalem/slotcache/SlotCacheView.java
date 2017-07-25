@@ -41,9 +41,9 @@ public class SlotCacheView implements CustomInventory{
             inventory.setItem(slot, item);
             slot++;
         }
-        rewards [0] = new ItemStack(Material.DIRT);//provider.getWeightedItem();
-        rewards [1] = new ItemStack(Material.DIRT);//provider.getWeightedItem();
-        rewards [2] = new ItemStack(Material.DIRT); //provider.getWeightedItem();
+        rewards [0] = provider.getWeightedItem();
+        rewards [1] = provider.getWeightedItem();
+        rewards [2] = provider.getWeightedItem();
     }
 
     private void reward(ItemStack stack){
