@@ -131,13 +131,7 @@ public class SlotCacheView implements CustomInventory{
     @Override @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if(spinTask != null) spinTask.cancel();
-        if(isShuffling){
-            //if they exit while spinning, reward a random item with no chance to pick
-            reward(provider.getWeightedItem());
-        }else if(!hasPicked){
-            //the player already had a chance to pick, now we make that choice (from the availbe 3 choices) for them
-            reward(inventory.getItem(choosableSlots[0]));
-        }
+        if(isShuffling || !hasPicked) reward(rewards[0]);
     }
 
     @Override @EventHandler
