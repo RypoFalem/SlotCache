@@ -20,6 +20,7 @@ public class SlotCacheView implements CustomInventory{
     private boolean isShuffling = true;
     private boolean hasPicked = false;
     private final int[] choosableSlots = {12, 13, 14};
+    private final ItemStack[] rewards = new ItemStack[3];
     private BukkitRunnable spinTask;
 
     SlotCacheView(Player player, SlotCacheItem cache){
@@ -40,6 +41,9 @@ public class SlotCacheView implements CustomInventory{
             inventory.setItem(slot, item);
             slot++;
         }
+        rewards [0] = new ItemStack(Material.DIRT);//provider.getWeightedItem();
+        rewards [1] = new ItemStack(Material.DIRT);//provider.getWeightedItem();
+        rewards [2] = new ItemStack(Material.DIRT); //provider.getWeightedItem();
     }
 
     private void reward(ItemStack stack){
@@ -84,12 +88,13 @@ public class SlotCacheView implements CustomInventory{
             List<ItemStack> items = initItems();
             int count = 0;
             final int max = 50;
+            int spins = 0;
 
             @Override
             public void run() {
                 count++;
-                if(count > 40 && count % 2 != 0) return;
-                if(count > 45 && count % 4 != 0) return;
+                if(count > 42 && count % 2 != 0) return;
+                if(count > 47 && count % 4 != 0) return;
                 Bukkit.getPlayer(player).playSound(Bukkit.getPlayer(player).getLocation(), Sound.BLOCK_WOOD_PRESSUREPLATE_CLICK_ON, SoundCategory.MASTER, .25f, 3);
                 for(int i = 0; i < 9; i++){
                     int slot = i;
@@ -99,8 +104,13 @@ public class SlotCacheView implements CustomInventory{
                     getInventory().setItem(slot, items.get(i).clone());
                 }
                 items.remove(0);
-                items.add(provider.getWeightedItem());
-                if(count >= max){
+                spins++;
+                if(spins >= max - 6 && spins < max - 3){
+                    items.add(rewards[max - spins - 1 - 3]);
+                } else{
+                    items.add(provider.getWeightedItem());
+                }
+                if(spins >= max){
                     this.cancel();
                     isShuffling = false;
                 }
