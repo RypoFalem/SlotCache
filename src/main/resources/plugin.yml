@@ -3,11 +3,11 @@ description: A neat way for players to aquire items
 author: RypoFalem
 version: 0.1
 main: io.github.rypofalem.slotcache.SlotCachePlugin
-depend: [ Custom ]
+depend: [ Custom, RandomPlayerHead ]
 commands:
   slotcache:
     permission: slotcache.admin
-    usage: "/<command> add <cachename> <hand|customItemName> <weight> [amount(min:max)]\n
+    usage: "/<command> add <cachename> <hand|customItemName|rph> <weight> [amount(min:max)]\n
     /<command> <list|ls> <cachename>"
     description: admin stuff
 permissions:

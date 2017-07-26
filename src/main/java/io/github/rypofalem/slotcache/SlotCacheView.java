@@ -48,31 +48,7 @@ public class SlotCacheView implements CustomInventory{
 
     private void reward(ItemStack stack){
         Bukkit.getPlayer(player).getWorld().dropItem(Bukkit.getPlayer(player).getEyeLocation(), stack);
-        Map<String, Object> map = new HashMap<>();
-        String name = stack.hasItemMeta() && stack.getItemMeta().hasDisplayName() ?
-                stack.getItemMeta().getDisplayName() : stack.getType().name().toLowerCase();
-        name = String.format("%s[%s%s]", ChatColor.GREEN, name, ChatColor.GREEN);
-        map.put("text",name);
-        if(stack.hasItemMeta() && stack.getItemMeta().hasLore()){
-            Map<String, Object> hoverEvent = new HashMap<>();
-            hoverEvent.put("action", "show_text");
-            StringBuilder allLines = new StringBuilder();
-            for(String line : stack.getItemMeta().getLore()){
-                allLines.append(line).append("\n");
-            }
-            hoverEvent.put("value", allLines.toString());
-            map.put("hoverEvent", hoverEvent);
-        }else{
-            Map<String, Object> hoverEvent = new HashMap<>();
-            hoverEvent.put("action", "show_text");
-            hoverEvent.put("value", "A normal " + stack.getType().name().toLowerCase());
-            map.put("hoverEvent", hoverEvent);
-        }
-        List<Object> textParts = new ArrayList<>();
-        textParts.add(String.format("%sYou win %dx ", ChatColor.DARK_AQUA, stack.getAmount()));
-        textParts.add(map);
-
-        String cmd = String.format("minecraft:tellraw %s %s", Bukkit.getPlayer(player).getName(), JSONValue.toJSONString(textParts));
+        String cmd = String.format("minecraft:tellraw %s %s", Bukkit.getPlayer(player).getName(), Util.getDescriptiveButton(stack));
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
         hasPicked = true;
     }
