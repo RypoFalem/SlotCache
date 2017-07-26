@@ -1,5 +1,6 @@
 package io.github.rypofalem.slotcache.slotitems;
 
+import com.winthier.rph.RPHAPI;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
@@ -13,6 +14,6 @@ public class RandomHeadItem extends SlotItem{
 
     @Override
     public ItemStack getItem() {
-        return null;
+        return RPHAPI.getRandomPlayerHead();
     }
 }

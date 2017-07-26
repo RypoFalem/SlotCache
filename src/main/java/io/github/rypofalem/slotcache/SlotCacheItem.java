@@ -5,6 +5,7 @@ import com.winthier.custom.item.CustomItem;
 import com.winthier.custom.item.ItemContext;
 import com.winthier.custom.item.ItemDescription;
 import com.winthier.custom.item.UncraftableItem;
+import io.github.rypofalem.slotcache.slotitems.RandomHeadItem;
 import io.github.rypofalem.slotcache.slotitems.SlotItem;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -79,8 +80,8 @@ public class SlotCacheItem implements CustomItem, UncraftableItem{
             lore.add(String.format("%sProbability: %.2f%s", ChatColor.GREEN.toString(), slotItem.getWeight() * 100.0 / totalWeight, "%"));
             lore.add(String.format("%sAmount: %s", ChatColor.GREEN.toString(), slotItem.getMin() == slotItem.getMax() ?
                     slotItem.getMax() + "" : String.format("%d to %d", slotItem.getMin(), slotItem.getMax())));
-            System.out.println(lore.toString());
             ItemMeta meta = item.getItemMeta();
+            if(slotItem instanceof RandomHeadItem) meta.setDisplayName("Random Player Head");
             meta.setLore(lore);
             item.setItemMeta(meta);
             itemList.add(item);

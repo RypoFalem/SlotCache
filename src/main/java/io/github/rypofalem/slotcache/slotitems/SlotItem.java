@@ -29,12 +29,16 @@ public abstract class SlotItem {
                 ItemType type = ItemType.valueOf((String)itemMap.get("type"));
                 switch(type){
                     case BASIC: return new BasicItem(
-                                ((ItemStack) itemMap.get("item")).clone(),
-                                (Integer) itemMap.get("weight"),
-                                (Integer) itemMap.get("min"),
-                                (Integer) itemMap.get("max"));
+                            ((ItemStack) itemMap.get("item")).clone(),
+                            (Integer) itemMap.get("weight"),
+                            (Integer) itemMap.get("min"),
+                            (Integer) itemMap.get("max"));
                     case CUSTOM: return new CustomSlotItem(
                             (String) itemMap.get("item"),
+                            (Integer) itemMap.get("weight"),
+                            (Integer) itemMap.get("min"),
+                            (Integer) itemMap.get("max"));
+                    case RANDOMHEAD: return new RandomHeadItem(
                             (Integer) itemMap.get("weight"),
                             (Integer) itemMap.get("min"),
                             (Integer) itemMap.get("max"));

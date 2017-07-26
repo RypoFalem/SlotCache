@@ -35,6 +35,13 @@
       <version>0.1</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Random Player Head-->
+    <dependency>
+      <groupId>com.winthier.rph</groupId>
+      <artifactId>random-player-head</artifactId>
+      <version>0.1</version>
+      <scope>provided</scope>
+    </dependency>
     <!--Lombok-->
     <dependency>
       <groupId>org.projectlombok</groupId>
