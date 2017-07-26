@@ -55,4 +55,5 @@ public abstract class SlotItem {
     public abstract int getMin();
     public abstract int getMax();
     public abstract int getWeight();
+    public abstract Map<String, Object> toMap();
 }

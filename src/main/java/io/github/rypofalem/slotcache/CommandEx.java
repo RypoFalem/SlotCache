@@ -2,7 +2,7 @@ package io.github.rypofalem.slotcache;
 
 import com.winthier.custom.CustomPlugin;
 import com.winthier.custom.item.CustomItem;
-import io.github.rypofalem.slotcache.slotitems.ItemType;
+import io.github.rypofalem.slotcache.slotitems.*;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -49,29 +49,10 @@ public class CommandEx implements CommandExecutor{
         if(args.length < 4) return false;
         String cacheName = args[1];
         ItemStack item;
+        SlotItem slotItem;
         int weight;
         int min = 1;
         int max = 1;
-
-        if(args[2].equalsIgnoreCase("hand")){
-            if(sender instanceof Player){
-                item = ((Player)sender).getEquipment().getItemInMainHand().clone();
-                if(item == null || item.getType() == Material.AIR){
-                    sender.sendMessage("You must be holding an item in your mainhand!");
-                    return true;
-                }
-                item.setAmount(1);
-            } else {
-                sender.sendMessage("Only players can use the hand argument");
-                return true;
-            }
-        } else {
-            item = CustomPlugin.getInstance().getItemManager().getCustomItem(args[2]).spawnItemStack(1);
-            if(item == null){
-                sender.sendMessage(String.format("No such custom item with ID: '%s'", args[2]));
-                return true;
-            }
-        }
 
         try{
             weight = Integer.parseInt(args[3]);
@@ -85,27 +66,47 @@ public class CommandEx implements CommandExecutor{
             return true;
         }
 
-        Map<String, Object> map = new HashMap<>();
-        CustomItem customItem = CustomPlugin.getInstance().getItemManager().getCustomItem(item);
-        if(customItem == null){
-            map.put("item", item);
-            map.put("type", ItemType.BASIC.toString());
-        }else{
-            map.put("item", customItem.getCustomId());
-            map.put("type", ItemType.CUSTOM.toString());
+        switch(args[2].toLowerCase()){
+            case "rph":
+                slotItem = new RandomHeadItem(weight, min, max);
+                break;
+
+            case "hand":
+                if(!(sender instanceof Player)){
+                    sender.sendMessage("Only players can use the hand argument");
+                    return true;
+                }
+                item = ((Player)sender).getEquipment().getItemInMainHand().clone();
+                if(item == null || item.getType() == Material.AIR){
+                    sender.sendMessage("You must be holding an item in your mainhand!");
+                    return true;
+                }
+                item.setAmount(1);
+                CustomItem customItem = CustomPlugin.getInstance().getItemManager().getCustomItem(item);
+                if(customItem == null){
+                    slotItem = new BasicItem(item, weight, min, max);
+                }else{
+                    slotItem = new CustomSlotItem(customItem.getCustomId(), weight, min, max);
+                }
+                break;
+
+            default:
+                item = CustomPlugin.getInstance().getItemManager().getCustomItem(args[2]).spawnItemStack(1);
+                if(item == null){
+                    sender.sendMessage(String.format("No such custom item with ID: '%s'", args[2]));
+                    return true;
+                }
+                customItem = CustomPlugin.getInstance().getItemManager().getCustomItem(item);
+                slotItem = new CustomSlotItem(customItem.getCustomId(), weight, min, max);
         }
-        map.put("weight", weight);
-        map.put("min", min);
-        map.put("max", max);
+
         List list = getConfig().getList(Util.getKeyForCacheItems(cacheName), new ArrayList<>());
-        try{list.add(map);}
+        try{list.add(slotItem.toMap());}
         catch(Exception e) {
             sender.sendMessage("Unable to add map config caches." + cacheName + ". You shouldn't ever see this message.");
             return true;}
-
         getConfig().set(Util.getKeyForCacheItems(cacheName), list);
         saveConfig();
-
         return true;
     }
 }
