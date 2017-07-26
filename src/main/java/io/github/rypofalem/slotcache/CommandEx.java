@@ -1,6 +1,8 @@
 package io.github.rypofalem.slotcache;
 
 import com.winthier.custom.CustomPlugin;
+import com.winthier.custom.item.CustomItem;
+import io.github.rypofalem.slotcache.slotitems.ItemType;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -84,7 +86,14 @@ public class CommandEx implements CommandExecutor{
         }
 
         Map<String, Object> map = new HashMap<>();
-        map.put("item", item);
+        CustomItem customItem = CustomPlugin.getInstance().getItemManager().getCustomItem(item);
+        if(customItem == null){
+            map.put("item", item);
+            map.put("type", ItemType.BASIC.toString());
+        }else{
+            map.put("item", customItem.getCustomId());
+            map.put("type", ItemType.CUSTOM.toString());
+        }
         map.put("weight", weight);
         map.put("min", min);
         map.put("max", max);

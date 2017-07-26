@@ -1,11 +1,11 @@
 package io.github.rypofalem.slotcache;
 
 import com.winthier.custom.CustomPlugin;
-import com.winthier.custom.inventory.InventoryManager;
 import com.winthier.custom.item.CustomItem;
 import com.winthier.custom.item.ItemContext;
 import com.winthier.custom.item.ItemDescription;
 import com.winthier.custom.item.UncraftableItem;
+import io.github.rypofalem.slotcache.slotitems.SlotItem;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,8 +33,8 @@ public class SlotCacheItem implements CustomItem, UncraftableItem{
         type = id;
         template = new ItemStack(Material.ENDER_CHEST);
         slotItems = new ArrayList<>();
-        load();
         ConfigurationSection cacheConfig = SlotCachePlugin.instance().getConfig().getConfigurationSection("caches."+id);
+        load();
         description = new ItemDescription();
         description.setCategory("Loot");
         description.setDisplayName(cacheConfig.getString("displayName", "Slot Cache"));
@@ -54,18 +54,10 @@ public class SlotCacheItem implements CustomItem, UncraftableItem{
         slotItems.clear();
         List<Map<?,?>> items = SlotCachePlugin.instance().getConfig().getMapList("caches."+type+".items");
         for(Map itemMap: items){
-            try {
-                SlotItem slotItem = new SlotItem();
-                slotItem.item = ((ItemStack) itemMap.get("item")).clone();
-                slotItem.weight = (Integer) itemMap.get("weight");
-                slotItem.min = (Integer) itemMap.get("min");
-                slotItem.max = (Integer) itemMap.get("max");
-                slotItems.add(slotItem);
-                totalWeight += slotItem.weight;
-            } catch (Exception e){
-                System.out.print("Error loading config for " + type +"." + itemMap.toString());
-                e.printStackTrace();
-            }
+            SlotItem slotItem = SlotItem.of(itemMap);
+            if(slotItem == null) continue;
+            slotItems.add(slotItem);
+            totalWeight += slotItem.getWeight();
         }
     }
 
@@ -84,7 +76,7 @@ public class SlotCacheItem implements CustomItem, UncraftableItem{
             }else{
                 lore = new ArrayList<>();
             }
-            lore.add(String.format("%sProbability: %.2f%s", ChatColor.GREEN.toString(), slotItem.weight * 100.0 / totalWeight, "%"));
+            lore.add(String.format("%sProbability: %.2f%s", ChatColor.GREEN.toString(), slotItem.getWeight() * 100.0 / totalWeight, "%"));
             lore.add(String.format("%sAmount: %s", ChatColor.GREEN.toString(), slotItem.getMin() == slotItem.getMax() ?
                     slotItem.getMax() + "" : String.format("%d to %d", slotItem.getMin(), slotItem.getMax())));
             System.out.println(lore.toString());

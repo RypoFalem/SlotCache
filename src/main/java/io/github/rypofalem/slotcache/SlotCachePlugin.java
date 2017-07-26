@@ -1,17 +1,18 @@
 package io.github.rypofalem.slotcache;
 
 import com.winthier.custom.event.CustomRegisterEvent;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
+@Getter
 public class SlotCachePlugin extends JavaPlugin implements Listener{
-    static final Random random = new Random(System.currentTimeMillis());
-    static SlotCachePlugin instance;
+    @Getter static final Random random = new Random(System.currentTimeMillis());
+    @Getter static SlotCachePlugin instance;
     List<SlotCacheItem> caches;
 
     public SlotCachePlugin() {

@@ -1,5 +1,6 @@
 package io.github.rypofalem.slotcache;
 
+import io.github.rypofalem.slotcache.slotitems.SlotItem;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class RandomSlotItemProvider {
     public ItemStack getWeightedItem(){
         if(weightedChoices == null) return null;
 
-        int rand = SlotCachePlugin.random.nextInt(totalWeight);
+        int rand = SlotCachePlugin.getRandom().nextInt(totalWeight);
         for(SlotItem key : weightedChoices.keySet()){
             if(weightedChoices.get(key) <= 0) continue;
             rand -= weightedChoices.get(key);
