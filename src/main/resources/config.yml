@@ -4,51 +4,54 @@ caches:
     description: Contains valuable items such as diamonds, powerful tools, and rarely
       custom items.
     items:
+    - min: 1
+      max: 1
+      weight: 3
+      type: RANDOMHEAD
+    - item:
+        ==: org.bukkit.inventory.ItemStack
+        type: DIAMOND_BLOCK
+      min: 7
+      max: 20
+      weight: 10
+      type: BASIC
     - item:
         ==: org.bukkit.inventory.ItemStack
         type: DIAMOND
-      min: 32
+      min: 25
       max: 64
-      weight: 20
-    - item:
-        ==: org.bukkit.inventory.ItemStack
-        type: SKULL_ITEM
-        damage: 3
-        meta:
-          ==: ItemMeta
-          meta-type: SKULL
-          display-name: §rBlunderbuss
-          lore:
-          - §9Guns
-          - §rShoot bullets at your
-          - §renemies. You can load the
-          - §rblunderbuss with a wide
-          - §rvariety of bullets,
-          - §rincluding arrows, eggs, and
-          - §rnuggets.
-          - ''
-          - §aUSAGE§r Left click to shoot,
-          - §rright click to reload.
-          internal: H4sIAAAAAAAAAE2QzW6CQBhFvzZtgqSLps/QLQYEUZq4aMToEAeqIgg7fgYHHdAAU4Xn6gOW7ro8OffexRUBBHjz87KhOamGc143l2KITHg98rL+iBkvU1LFvK5FeNmdOWNf1SXLGRHgEaXwnsjTzFAVRdJHUyJphjqRIiPRpXiSaoqeatEoG4sg9qUrqZqc1AMQGnJveEX6RYAHAZ69iHECP6S15PBA5fRgsaRFes/uTmYOOl0nqPTaeI50VPR+9amvW+NfdtxE/pgFqkXDcsPjwpPX6paR1VZJiv136B7b0A1p4J4VbC7udoc1e+nl9tIqbHffYjdpHdOmdkd7TnNn2Xsf3xyT0cDf3PDIokHnnQJ/oeER7rCJbqhUjGwzm/2992RHBYGBmddXUtakAvgFhluXvlUBAAA=
-          skull-owner: Dispenser
+      weight: 50
+      type: BASIC
+    - item: guns:blunderbuss
       min: 1
       max: 1
       weight: 1
+      type: CUSTOM
     - item:
         ==: org.bukkit.inventory.ItemStack
-        type: NETHER_STAR
+        type: ELYTRA
       min: 1
       max: 1
-      weight: 5
+      weight: 10
+      type: BASIC
     - item:
         ==: org.bukkit.inventory.ItemStack
-        type: BOW
+        type: PAPER
         meta:
           ==: ItemMeta
           meta-type: UNSPECIFIC
-          enchants:
-            MENDING: 1
-            ARROW_INFINITE: 1
+          display-name: §rPet Certificate (§cFlame Fairy)
+          lore:
+          - §9Toys
+          - §rGives the owner the right to
+          - §rsummon a §cFlame Fairy
+          - ''
+          - §aUSAGE§r Right click to
+          - §rpermanently bind this pet to
+          - §ryou. Summon it with a Pet
+          - §rLeash.
+          internal: H4sIAAAAAAAAAONiYOBgEArPzCvJyEwt0nMuLS7Jz9XzdGHgL8mvLLYqSC0p1kvLScxNZQAAtkECzyoAAAA=
       min: 1
       max: 1
-      weight: 1
+      weight: 10
+      type: BASIC

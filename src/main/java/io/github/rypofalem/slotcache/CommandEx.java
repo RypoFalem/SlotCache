@@ -12,9 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CommandEx implements CommandExecutor{
 
@@ -32,20 +30,23 @@ public class CommandEx implements CommandExecutor{
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-//        /<command> add <cachename> <hand|customItemName> <weight> [amount(min:max)]
+//        /<command> add <cachename> <rph|hand|customItemName> <weight> [amount(min:max)]
 //        /<command> <list|ls> <cachename>
         if(args == null || args.length < 1) return false;
 
         switch (args[0].toLowerCase()){
             case "add" : return addToCache(sender, args);
+            case "reload" : reloadConfig(); return true;
+            case "ls":
+            case "list":
 
+                return true;
             default: return false;
         }
-        //return true;
     }
 
     private boolean addToCache(CommandSender sender, String[] args){
-        // /<command> add <cachename> <hand|customID> <weight> [amount(min:max)]
+        // /<command> add <cachename> <rph|hand|customID> <weight> [amount(min:max)]
         if(args.length < 4) return false;
         String cacheName = args[1];
         ItemStack item;
@@ -54,6 +55,7 @@ public class CommandEx implements CommandExecutor{
         int min = 1;
         int max = 1;
 
+        //parse weight and amount
         try{
             weight = Integer.parseInt(args[3]);
             if(args.length > 4){
@@ -66,6 +68,7 @@ public class CommandEx implements CommandExecutor{
             return true;
         }
 
+        //parse item
         switch(args[2].toLowerCase()){
             case "rph":
                 slotItem = new RandomHeadItem(weight, min, max);
@@ -83,28 +86,30 @@ public class CommandEx implements CommandExecutor{
                 }
                 item.setAmount(1);
                 CustomItem customItem = CustomPlugin.getInstance().getItemManager().getCustomItem(item);
-                if(customItem == null){
-                    slotItem = new BasicItem(item, weight, min, max);
-                }else{
-                    slotItem = new CustomSlotItem(customItem.getCustomId(), weight, min, max);
+                if(customItem != null){
+                    sender.sendMessage("Warning: It looks like the item in your hand is a custom item. " +
+                            "Items processed with the hand argument copy the literal state of the item. " +
+                            "If you prefer to get the default state of a custom item, delete this entry from the config and use the custom item ID instead of the hand argument.");
                 }
+                slotItem = new BasicItem(item, weight, min, max);
                 break;
 
+            //default expects the argument to be a custom item ID
             default:
                 item = CustomPlugin.getInstance().getItemManager().getCustomItem(args[2]).spawnItemStack(1);
                 if(item == null){
                     sender.sendMessage(String.format("No such custom item with ID: '%s'", args[2]));
                     return true;
                 }
-                customItem = CustomPlugin.getInstance().getItemManager().getCustomItem(item);
-                slotItem = new CustomSlotItem(customItem.getCustomId(), weight, min, max);
+                slotItem = new CustomSlotItem(args[2], weight, min, max);
         }
 
-        List list = getConfig().getList(Util.getKeyForCacheItems(cacheName), new ArrayList<>());
+        List list= getConfig().getList(Util.getKeyForCacheItems(cacheName), new ArrayList<>());
         try{list.add(slotItem.toMap());}
         catch(Exception e) {
             sender.sendMessage("Unable to add map config caches." + cacheName + ". You shouldn't ever see this message.");
-            return true;}
+            return true;
+        }
         getConfig().set(Util.getKeyForCacheItems(cacheName), list);
         saveConfig();
         return true;

@@ -14,6 +14,8 @@ public class Util {
         return String.format("caches.%s.items", cacheID);
     }
 
+
+    //gets a string which will translate to a hoverable text representation of an item when inserted in /tellraw
     public static String getDescriptiveButton(ItemStack stack){
         Map<String, Object> map = new HashMap<>();
         String name = stack.hasItemMeta() && stack.getItemMeta().hasDisplayName() ?

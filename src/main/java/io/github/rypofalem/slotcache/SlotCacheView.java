@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.json.simple.JSONValue;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class SlotCacheView implements CustomInventory{
     private final RandomSlotItemProvider provider;
     private boolean isShuffling = true;
     private boolean hasPicked = false;
-    private final int[] choosableSlots = {12, 13, 14};
+    private final int[] choosableSlots = {12, 13, 14}; // slots "in the middle" that can be clicked
     private final ItemStack[] rewards = new ItemStack[3];
     private BukkitRunnable spinTask;
 
@@ -28,12 +27,16 @@ public class SlotCacheView implements CustomInventory{
         this.cache = cache;
         this.provider = cache.createRandomSlotItemProvider();
         inventory = Bukkit.createInventory(player, 54, "Pick ONE item from the center!");
+
+        //add glowstone borders
         for(int slot = 3; slot < 6; slot++){
             inventory.setItem(slot, new ItemStack(Material.GLOWSTONE));
             inventory.setItem(slot + 18, new ItemStack(Material.GLOWSTONE));
         }
         inventory.setItem(11, new ItemStack(Material.GLOWSTONE));
         inventory.setItem(15, new ItemStack(Material.GLOWSTONE));
+
+        //display items with probabilities
         List<ItemStack> probabilities = cache.getItemsWithProbability();
         int slot = Math.max(54 - probabilities.size(), 27);
         for(ItemStack item : probabilities){
@@ -41,11 +44,14 @@ public class SlotCacheView implements CustomInventory{
             inventory.setItem(slot, item);
             slot++;
         }
+
+        //predetermine the items that will be availible for choice
         rewards [0] = provider.getWeightedItem();
         rewards [1] = provider.getWeightedItem();
         rewards [2] = provider.getWeightedItem();
     }
 
+    //give selected (or force selected) item to player, displaying a message in chat describing the item
     private void reward(ItemStack stack){
         Bukkit.getPlayer(player).getWorld().dropItem(Bukkit.getPlayer(player).getEyeLocation(), stack);
         String cmd = String.format("minecraft:tellraw %s %s", Bukkit.getPlayer(player).getName(), Util.getDescriptiveButton(stack));
@@ -58,19 +64,24 @@ public class SlotCacheView implements CustomInventory{
         return inventory;
     }
 
-    @Override @EventHandler
+    @Override
+    @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
+
+        //task to create movement of items through the chest
         spinTask = new BukkitRunnable(){
             List<ItemStack> items = initItems();
-            int count = 0;
+            int count = 0; //how many times the items have attempted to shift
             final int max = 50;
-            int spins = 0;
+            int spins = 0; //how many times the items have shifted, excluding the skipped ticks
 
             @Override
             public void run() {
                 count++;
+                //skip some ticks so it looks like the wheel is slowing down gradually before it stops
                 if(count > 42 && count % 2 != 0) return;
                 if(count > 47 && count % 4 != 0) return;
+
                 Bukkit.getPlayer(player).playSound(Bukkit.getPlayer(player).getLocation(), Sound.BLOCK_WOOD_PRESSUREPLATE_CLICK_ON, SoundCategory.MASTER, .25f, 3);
                 for(int i = 0; i < 9; i++){
                     int slot = i;
@@ -81,11 +92,15 @@ public class SlotCacheView implements CustomInventory{
                 }
                 items.remove(0);
                 spins++;
+
+                //add new items to the edge of the wheel. If the itemslot is predetermined to be picked, make sure it's the predetermined items
                 if(spins >= max - 6 && spins < max - 3){
                     items.add(rewards[max - spins - 1 - 3]);
                 } else{
                     items.add(provider.getWeightedItem());
                 }
+
+                //end spin
                 if(spins >= max){
                     this.cancel();
                     isShuffling = false;
@@ -129,7 +144,7 @@ public class SlotCacheView implements CustomInventory{
             if(event.getSlot() == slot){
                 reward(item);
                 hasPicked = true;
-                return;
+                break; //break so event is cancelled
             }
         }
         event.setCancelled(true);
